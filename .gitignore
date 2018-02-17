@@ -1,0 +1,14 @@
+
+#####################
+# C++ Ignore files #
+#####################
+*.gch
+*.out
+
+##########################
+# Jetbrains Ignore files #
+##########################
+*.iml
+.idea/
+cmake-build-debug/
+
