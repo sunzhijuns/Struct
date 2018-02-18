@@ -120,18 +120,18 @@ namespace structures {
 
 //    namespace link {
         // Singly-linked list node
-        template<class Elem>
-        class Link {
-        public:
-            Elem element;       //Value for this node
-            Link *next;         //Pointer to next node in list
-            Link(const Elem &element, Link *next = NULL) {
-                this->element = element;
-                this->next = next;
-            }
+    template<class Elem>
+    class Link {
+    public:
+        Elem element;       //Value for this node
+        Link *next;         //Pointer to next node in list
+        Link(const Elem &element, Link *next = NULL) {
+            this->element = element;
+            this->next = next;
+        }
 
-            Link(Link *next = NULL) { this->next = next; }
-        };
+        Link(Link *next = NULL) { this->next = next; }
+    };
 //    }
 
 
@@ -155,7 +155,7 @@ namespace structures {
             }
         }
 
-        const int DefaultListSize = 32;
+        const static int DefaultListSize = 32;
     public:
         LList(int size = DefaultListSize) { init(); }
         ~LList() { removeall(); }

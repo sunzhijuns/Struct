@@ -30,7 +30,7 @@ struct Point{
 };
 int main() {
 
-    structures::AList<Point> a;
+    structures::LList<Point> a;
     a.insert(Point(1,2));
     a.insert(Point(1,3));
     a.insert(Point(1,4));
