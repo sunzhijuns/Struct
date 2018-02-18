@@ -46,6 +46,13 @@ int main() {
     std::cout<< temp << "\n";
     a.print();
 
+    structures::LList<int> b;
+    b.insert(2);
+    b.insert(5);
+    b.insert(8);
+    b.print();
+
+
     return 0;
 }
 #endif

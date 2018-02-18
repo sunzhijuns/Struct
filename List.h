@@ -117,12 +117,18 @@ namespace structures {
         return true;
     }
 
+//#define LINK_DEBUG
 
 //    namespace link {
         // Singly-linked list node
     template<class Elem>
     class Link {
+
     private:
+#ifdef LINK_DEBUG
+        static int _freeListSize;
+#endif
+        const static int NewOnceCount = 20;
         static Link<Elem>* _freeList;//Head of the freelist
     public:
         Elem element;       //Value for this node
@@ -141,20 +147,47 @@ namespace structures {
     template <class Elem>
     Link<Elem>* Link<Elem>::_freeList = NULL;
 
+#ifdef LINK_DEBUG
+    template <class Elem>
+    int Link<Elem>::_freeListSize = 0;
+#endif
+
     template <class Elem>
     void* Link<Elem>::operator new(size_t){
-//        std::cout << "\nnew\n";
-        if (_freeList == NULL) return ::new Link;
+#ifdef LINK_DEBUG
+        std::cout << "\nfreeListSize : "<<_freeListSize << " new --start\n";
+#endif
+        if (_freeList == NULL){
+            Link<Elem> (*tempArray) = ::new Link[NewOnceCount];
+            Link<Elem>* temp = &tempArray[0];
+            for (int i = 1; i < NewOnceCount; ++i) {
+                tempArray[i].next = temp;
+                temp = &tempArray[i];
+            }
+            _freeList = &tempArray[NewOnceCount-1];
+//            return ::new Link;
+#ifdef LINK_DEBUG
+            _freeListSize = NewOnceCount;
+            std::cout << "\nfreeListSize : "<<_freeListSize << "\n";
+#endif
+        }
         Link<Elem>* temp = _freeList;   //Can take from freeList
         _freeList = _freeList->next;
+#ifdef LINK_DEBUG
+        _freeListSize--;
+        std::cout << "\nfreeListSize : "<<_freeListSize << " new --end\n";
+#endif
         return temp;
     }
 
     template <class Elem>
     void Link<Elem>::operator delete(void* ptr){
-//        std::cout << "\ndelete\n";
         ((Link<Elem>*)ptr)->next = _freeList;
         _freeList = (Link<Elem>*)ptr;
+#ifdef LINK_DEBUG
+        _freeListSize++;
+        std::cout << "\nfreeListSize : "<<_freeListSize << " delete\n";
+#endif
     }
 
 
