@@ -191,7 +191,7 @@ struct Point{
 //    }
 };
 
-#define TEST_DLIST_INSERT
+//#define TEST_DLIST_INSERT
 #ifdef TEST_DLIST_INSERT
 
 int main(){
