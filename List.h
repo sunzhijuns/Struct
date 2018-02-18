@@ -122,6 +122,8 @@ namespace structures {
         // Singly-linked list node
     template<class Elem>
     class Link {
+    private:
+        static Link<Elem>* _freeList;//Head of the freelist
     public:
         Elem element;       //Value for this node
         Link *next;         //Pointer to next node in list
@@ -131,7 +133,32 @@ namespace structures {
         }
 
         Link(Link *next = NULL) { this->next = next; }
+
+        void* operator new(size_t);
+        void operator delete(void*);
     };
+
+    template <class Elem>
+    Link<Elem>* Link<Elem>::_freeList = NULL;
+
+    template <class Elem>
+    void* Link<Elem>::operator new(size_t){
+//        std::cout << "\nnew\n";
+        if (_freeList == NULL) return ::new Link;
+        Link<Elem>* temp = _freeList;   //Can take from freeList
+        _freeList = _freeList->next;
+        return temp;
+    }
+
+    template <class Elem>
+    void Link<Elem>::operator delete(void* ptr){
+//        std::cout << "\ndelete\n";
+        ((Link<Elem>*)ptr)->next = _freeList;
+        _freeList = (Link<Elem>*)ptr;
+    }
+
+
+
 //    }
 
 
