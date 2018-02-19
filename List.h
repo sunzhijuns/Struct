@@ -120,12 +120,7 @@ namespace structures {
         using AList<Elem>::rightLength;
         using AList<Elem>::setPos;
         using AList<Elem>::getValue;
-        void print() const{
-            AList<Elem>::print();
-        }
-//        AList<Elem>::print;
-
-
+        using AList<Elem>::print;
     };
 
 
