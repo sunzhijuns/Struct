@@ -3,7 +3,7 @@
 //
 #include <assert.h>
 #include "Stack.h"
-#define TEST_STRUCT_STACK_H
+//#define TEST_STRUCT_STACK_H
 #ifdef TEST_STRUCT_STACK_H
 
 namespace test_stack {

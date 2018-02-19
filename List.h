@@ -103,7 +103,7 @@ namespace structures {
         const static int DefaultListSize = 20;
         SAList(int size = DefaultListSize) : AList<Elem>(size){}
         ~SAList(){}
-        AList<Elem>::clear;
+        using AList<Elem>::clear;
         bool insert(const Elem& item){
             Elem curr;
             for (setStart(); getValue(curr); next())
@@ -111,15 +111,15 @@ namespace structures {
             return AList<Elem>::insert(item);
         }
         // All remaining methods are exposed from AList
-        AList<Elem>::remove;
-        AList<Elem>::setStart;
-        AList<Elem>::setEnd;
-        AList<Elem>::prev;
-        AList<Elem>::next;
-        AList<Elem>::leftLength;
-        AList<Elem>::rightLength;
-        AList<Elem>::setPos;
-        AList<Elem>::getValue;
+        using AList<Elem>::remove;
+        using AList<Elem>::setStart;
+        using AList<Elem>::setEnd;
+        using AList<Elem>::prev;
+        using AList<Elem>::next;
+        using AList<Elem>::leftLength;
+        using AList<Elem>::rightLength;
+        using AList<Elem>::setPos;
+        using AList<Elem>::getValue;
         void print() const{
             AList<Elem>::print();
         }
