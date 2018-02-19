@@ -23,7 +23,7 @@ int main ()
 
 #endif
 
-#define TEST_DICTIONARY
+//#define TEST_DICTIONARY
 #ifdef TEST_DICTIONARY
 
 #include "Dictionary.h"
