@@ -12,6 +12,9 @@ namespace structures {
     template<class Elem>
     class List {
     public:
+        virtual ~List() {}
+    public:
+
         virtual void clear() = 0;
 
         virtual bool insert(const Elem &) = 0;/* ---|i----- */
@@ -51,7 +54,7 @@ namespace structures {
             _listSize = _fence = 0;
             _listArray = new Elem[_maxSize];
         }
-        ~AList(){
+        virtual ~AList(){
             delete[] _listArray;
         }
         void clear(){
@@ -91,6 +94,40 @@ namespace structures {
             std::cout << ">\n";
         }
     };
+
+
+    // Sorted array-based list
+    template <class Elem, class Compare>
+    class SAList: protected AList<Elem>{
+    public:
+        const static int DefaultListSize = 20;
+        SAList(int size = DefaultListSize) : AList<Elem>(size){}
+        ~SAList(){}
+        AList<Elem>::clear;
+        bool insert(const Elem& item){
+            Elem curr;
+            for (setStart(); getValue(curr); next())
+                if (!Compare::lt(curr, item)) break;
+            return AList<Elem>::insert(item);
+        }
+        // All remaining methods are exposed from AList
+        AList<Elem>::remove;
+        AList<Elem>::setStart;
+        AList<Elem>::setEnd;
+        AList<Elem>::prev;
+        AList<Elem>::next;
+        AList<Elem>::leftLength;
+        AList<Elem>::rightLength;
+        AList<Elem>::setPos;
+        AList<Elem>::getValue;
+        void print() const{
+            AList<Elem>::print();
+        }
+//        AList<Elem>::print;
+
+
+    };
+
 
 //#define LINK_DEBUG
 
@@ -333,6 +370,165 @@ namespace structures {
         }
         void print() const;
     };
+
+
+
+    template <class Elem>//Insert at front of partition
+    bool AList<Elem>::insert(const Elem& item) {
+        if (_listSize == _maxSize) return false;    //List is full;
+        for (int i=_listSize; i>_fence; i--)        //Shift Elems up
+            _listArray[i] = _listArray[i-1];        //  to make room
+        _listArray[_fence] = item;
+        _listSize++;                //Increment list size
+        return true;
+    }
+    template <class Elem>// Append Element to end of the list
+    bool AList<Elem>::append(const Elem & item) {
+        if (_listSize == _maxSize) return false;
+        _listArray[_listSize++] = item;
+        return true;
+    }
+    //Remove and return first Elem in right partition
+    template <class Elem>
+    bool AList<Elem>::remove(Elem & item) {
+        if (rightLength() == 0) return false;   //Nothing in right
+        item = _listArray[_fence];              //Copy removed Elem
+        for (int i=_fence; i<_listSize-1; i++)  //Shift them down
+            _listArray[i] = _listArray[i+1];    //Decrement size
+        _listSize--;
+        return true;
+    }
+
+
+    template<class Elem>
+    // Insert at front of right partition;
+    bool LList<Elem>::insert(const Elem &item) {
+        _fence->next = new Link<Elem>(item, _fence->next);
+        if (_tail == _fence) _tail = _fence->next;  //new tail
+        _rightcnt++;
+        return true;
+    }
+
+    template<class Elem>
+    // Append Elem to end of the list
+    bool LList<Elem>::append(const Elem &item) {
+        _tail = _tail->next = new Link<Elem>(item, NULL);
+        _rightcnt++;
+        return true;
+    }
+
+    template <class Elem>//Remove and return first Elem in right partition
+    bool LList<Elem>::remove(Elem & it) {
+        if (_fence->next == NULL) return false; //Empty right
+        it = _fence->next->element;
+        Link<Elem>* ltemp = _fence->next;
+        _fence->next = ltemp->next;
+        if (_tail == ltemp) _tail = _fence;
+        delete ltemp;
+        _rightcnt--;
+        return true;
+
+    }
+
+
+    //Move fence one step left; no change if left is empty
+    template <class Elem>
+    void LList<Elem>::prev() {
+        if (_fence == _head) return; // No previous Elem
+        Link<Elem>* temp = _head;
+        while (temp->next != _fence) temp = temp->next;
+        _fence = temp;
+        _leftcnt--; _rightcnt++;
+    }
+
+    //Set the size of left partition to pos
+    template <class Elem>
+    bool LList<Elem>::setPos(int pos) {
+        if ((pos < 0) || (pos > _rightcnt + _leftcnt)) return false;
+        _fence = _head;
+        for (int i = 0; i < pos; ++i) _fence = _fence->next;
+        return true;
+    }
+
+    template <class Elem>
+    void LList<Elem>::print() const {
+        Link<Elem>* temp = _head;
+        std::cout << "< ";
+        while (temp != _fence){
+            std::cout << temp->next->element << " ";
+            temp = temp->next;
+        }
+        std::cout << "| ";
+        while (temp->next != NULL){
+            std::cout << temp->next->element << " ";
+            temp = temp->next;
+        }
+        std::cout << ">\n";
+    }
+
+    template <class Elem> // Insert at front of right partition
+    bool DList<Elem>::insert(const Elem & item) {
+        _fence->next = new DLink<Elem>(item, _fence, _fence->next);
+        if (_fence->next->next != NULL) // if not deleting at end
+            _fence->next->next->prev = _fence->next;
+        if (_tail == _fence)
+            _tail = _fence->next;   //so set tail
+        _rightcnt++;                //Added to right
+        return true;
+    }
+
+    template <class Elem> // Append Elem to end of the list
+    bool DList<Elem>::append(const Elem & item) {
+        _tail = _tail->next = new DLink<Elem>(item, _tail, NULL);
+        _rightcnt++;
+        return true;
+    }
+
+    template <class Elem> // Remove and return first Elem in right partition;
+    bool DList<Elem>::remove(Elem & it) {
+        if (_fence->next == NULL) return false; // Empty right
+        it = _fence->next->element;             //Remember value
+        DLink<Elem>* ltemp = _fence->next;      //Remember link node
+        if (ltemp->next != NULL) ltemp->next->prev = _fence;
+        else _tail = _fence;
+        _fence->next = ltemp->next;
+        delete ltemp;
+        _rightcnt--;
+        return true;
+    }
+
+    template <class Elem> // Move fence one step left; no change if left is empty;
+    void DList<Elem>::prev() {
+        if (_fence != _head)
+        { _fence = _fence->prev; _leftcnt--; _rightcnt++; }
+    }
+
+
+    //Set the size of left partition to pos
+    template <class Elem>
+    bool DList<Elem>::setPos(int pos) {
+        if ((pos < 0) || (pos > _rightcnt + _leftcnt)) return false;
+        _fence = _head;
+        for (int i = 0; i < pos; ++i) _fence = _fence->next;
+        return true;
+    }
+
+    template <class Elem>
+    void DList<Elem>::print() const {
+        DLink<Elem>* temp = _head;
+        std::cout << "< ";
+        while (temp != _fence){
+            std::cout << temp->next->element << " ";
+            temp = temp->next;
+        }
+        std::cout << "| ";
+        while (temp->next != NULL){
+            std::cout << temp->next->element << " ";
+            temp = temp->next;
+        }
+        std::cout << ">\n";
+    }
+
 }
 
 #endif //STRUCT_LIST_H

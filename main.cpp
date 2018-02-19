@@ -1,9 +1,10 @@
 #include <iostream>
 
 #include <list>
-
 //#define MAIN_CPP
+
 #ifdef MAIN_CPP
+#include "List.h"
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
