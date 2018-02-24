@@ -3,7 +3,7 @@
 //
 #include "BinaryTree.h"
 
-#define TEST_STRUCT_BINARYTREE_H
+//#define TEST_STRUCT_BINARYTREE_H
 #ifdef TEST_STRUCT_BINARYTREE_H
 
 using structures::binnode::BinNodePtr;
