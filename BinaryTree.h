@@ -7,6 +7,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include "Dictionary.h"
 
 namespace structures{
 
@@ -36,6 +37,57 @@ namespace structures{
             virtual bool isLeaf() = 0;
         };
 
+        // Binary Search Tree implementation for the Dictionary ADT
+        template <class Key, class Elem, class KEComp, class EEComp>
+        class BST:public Dictionary<Key,Elem,KEComp,EEComp>{
+        private:
+            BinNode<Elem>* _root;
+            int _nodecount;
+
+            // Private "helper" functions
+            void clearhelp(BinNode<Elem>*);
+            virtual BinNode<Elem>* inserthelp(BinNode<Elem>*, const Elem&) = 0;
+            BinNode<Elem>* deletemin(BinNode<Elem>*, BinNode<Elem>* &);
+            BinNode<Elem>* removehelp(BinNode<Elem>*, const Key&, BinNode<Elem>* &);
+            bool findhelp(BinNode<Elem>*, const Key&, Elem&) const;
+            void printhelp(BinNode<Elem>*, int) const;
+
+        public:
+            BST() { _root = NULL, _nodecount = 0; }
+            ~BST() { clearhelp(_root); }
+            void clear()
+            { clearhelp(_root); _root = NULL; _nodecount = 0; }
+            bool insert(const Elem& e) {
+                _root = inserthelp(_root, e);
+                _nodecount++;
+                return true;
+            }
+            bool remove(const Key& k, Elem& e) {
+                BinNode<Elem>* t = NULL;
+                _root = removehelp(_root, k, t);
+                if (t == NULL) return false;
+                e = t->val();
+                _nodecount--;
+                delete t;
+                return true;
+            }
+            bool removeAny(Elem& e){
+                if (_root == NULL) return false;
+                BinNode<Elem>* t;
+                _root = deletemin(_root, t);
+                e = t->val();
+                delete t;
+                _nodecount--;
+                return true;
+            }
+            bool find(const Key& k, Elem& e) const
+            { return findhelp(_root, k, e); }
+            int size() { return _nodecount; }
+            void print() const {
+                if (_root == NULL) std::cout << "The BST is empty.\n";
+                else printhelp(_root, 0);
+            }
+        };
 
         template<class Elem>
         void visit(BinNode<Elem> *node) {
@@ -124,11 +176,11 @@ namespace structures{
             void* operator new(size_t);
             void operator delete(void*);
         };
-
 #ifdef DEBUG_STRUCT_BINARYTREE_H_BINNODE_BINNODEPTR_FREELIST
         template <class Elem>
         int BinNodePtr<Elem>::_freeListSize = 0;
 #endif
+
         template <class Elem>
         BinNodePtr<Elem> * BinNodePtr<Elem>::_freeList = NULL;
 
@@ -172,6 +224,83 @@ namespace structures{
                       <<_freeListSize << " delete "<<"\n";
 #endif
         }
+
+        template <class Key, class Elem, class KEComp, class EEComp>
+        bool BST<Key, Elem, KEComp, EEComp>::findhelp(
+                BinNode<Elem> * subroot, const Key & k, Elem & e) const {
+            if (subroot == NULL) return false;      // Empty tree
+            else if (KEComp::lt(k,subroot->val()))  // Check left
+                return findhelp(subroot->left(), k, e);
+            else if (KEComp::gt(k,subroot->val()))  // Check right
+                return findhelp(subroot->right(),k,e);
+            else { e = subroot->val(); return true; }   // Found it
+        }
+
+        template <class Key, class Elem, class KEComp, class EEComp>
+        BinNode<Elem>* BST<Key, Elem, KEComp, EEComp>::deletemin(
+                BinNode<Elem> * subroot, BinNode<Elem> *& min) {
+            if (subroot->left() == NULL) {  // Found min
+                min = subroot; return subroot->right();
+            }
+            else {
+                subroot->setLeft(deletemin(subroot->left(), min));
+                return subroot;
+            }
+        }
+
+        template <class Key, class Elem, class KEComp, class EEComp>
+        void BST<Key, Elem, KEComp, EEComp>::clearhelp(
+                BinNode<Elem> * subroot) {
+            if (subroot == NULL) return;
+            clearhelp(subroot->left());
+            clearhelp(subroot->right());
+            delete subroot;
+        }
+
+        template <class Key, class Elem, class KEComp, class EEComp>
+        BinNode<Elem>* BST<Key, Elem, KEComp, EEComp>::removehelp(
+                BinNode<Elem> * subroot, const Key & k, BinNode<Elem> *& t) {
+            if (subroot == NULL) return NULL;   // Val is not in tree
+            else if (KEComp::lt(k, subroot->val())) // Check left
+                subroot->setLeft(removehelp(subroot->left(), k, t));
+            else if (KEComp::gt(k, subroot->val())) // Check right
+                subroot->setRight(removehelp(subroot->right(), k, t));
+            else {                                  // Found it : remove it
+                BinNode<Elem> * tmp;
+                t = subroot;
+                if (subroot->left() == NULL)
+                    subroot = subroot->right();
+                else if (subroot->right() == NULL)
+                    subroot = subroot->left();
+                else {
+                    subroot->setRight(deletemin(subroot->right(), tmp));
+                    tmp->setLeft(subroot->left());
+                    tmp->setRight(subroot->right());
+                    subroot = tmp;
+                }
+            }
+            return subroot;
+        }
+
+        template <class Key, class Elem, class KEComp, class EEComp>
+        void BST<Key, Elem, KEComp, EEComp>::printhelp(
+                BinNode<Elem> * subroot, int level) const {
+            if (subroot == NULL) return ;   // Empty tree
+            printhelp(subroot->left(), level + 1);
+            for (int i = 0; i < level; ++i) std::cout << " ";   // Indent to level
+            std::cout << subroot->val() << " \n";
+            printhelp(subroot->right(), level + 1);
+        }
+//
+//        template <class Key, class Elem, class KEComp, class EEComp>
+//        BinNode<Elem>* inserthelp(
+//                BinNode<Elem>* subroot, const Elem& e) {
+//            if (subroot == NULL) return
+//        };
+
+
+
+
     }
 
     namespace union_varbinnode {

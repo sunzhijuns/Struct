@@ -1,29 +1,23 @@
 #include <iostream>
 
 #include <list>
-//#define MAIN_CPP
+#define MAIN_CPP
 
 #ifdef MAIN_CPP
-#include "List.h"
-int main() {
-    std::cout << "Hello, World!" << std::endl;
 
-    structures::AList<int> a;
-    a.insert(3);
-    a.insert(4);
-    a.insert(6);
-    a.setPos(2);
-    a.print();
-
-    a.insert(100);
-    a.insert(99);
-    a.print();
-
-    int temp;
-    a.remove(temp);
-    std::cout<< temp << "\n";
-    a.print();
-
-    return 0;
+#include <stdio.h>
+//函数定义为inline即:内联函数
+inline const char* dbtest(int i) {
+    return (i % 2 > 0) ? "奇" : "偶";
 }
+
+int main()
+{
+    int i = 0;
+    for (i=1; i < 100; i++) {
+        printf("i:%d    奇偶性:%s \n", i, dbtest(i));
+    }
+
+}
+
 #endif
