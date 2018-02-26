@@ -17,3 +17,4 @@ CMakeFiles/
 cmake_install.cmake
 Struct
 Makefile
+build/install_manifest.txt

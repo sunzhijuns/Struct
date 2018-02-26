@@ -10,5 +10,10 @@ message(status " Struct : this is source dir " ${STRUCT_SOURCE_DIR})
 message(status " Struct : this is source dir " ${PROJECT_SOURCE_DIR})
 
 ADD_SUBDIRECTORY(src bin)
+#
+#INSTALL(FILES COPYRIGHT README DESTINATION temp_bin/struct)
+#INSTALL(PROGRAMS run_struct.sh DESTINATION bin)
+#
+#INSTALL(DIRECTORY doc/ DESTINATION temp_bin/struct)
 
 
