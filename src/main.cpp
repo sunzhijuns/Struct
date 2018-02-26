@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <list>
-#define MAIN_CPP
+//#define MAIN_CPP
 
 #ifdef MAIN_CPP
 

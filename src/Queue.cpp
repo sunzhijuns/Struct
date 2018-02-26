@@ -3,7 +3,7 @@
 //
 #include "Queue.h"
 
-//#define TEST_STRUCT_QUEUE_H
+#define TEST_STRUCT_QUEUE_H
 #ifdef TEST_STRUCT_QUEUE_H
 
 
