@@ -12,3 +12,8 @@
 .idea/
 cmake-build-debug/
 
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Struct
+Makefile
