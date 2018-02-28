@@ -225,7 +225,7 @@ namespace structures {
         const static int DefaultListSize = 32;
     public:
         LList(int size = DefaultListSize) { init(); }
-        ~LList() { removeall(); }
+        virtual ~LList() { removeall(); }
         void clear() { removeall(); init(); }
         bool insert(const Elem&);
         bool append(const Elem&);
@@ -250,6 +250,40 @@ namespace structures {
         void print() const;
 
     };
+
+
+    // Sorted array-based list
+    template <class Elem, class Compare>
+    class SLList: protected LList<Elem>{
+    public:
+        const static int DefaultListSize = 20;
+        SLList(int size = DefaultListSize) : LList<Elem>(size){}
+        ~SLList(){}
+        using AList<Elem>::clear;
+        bool insert(const Elem& item){
+            Elem curr;
+            for (setStart(); getValue(curr); next())
+                if (!Compare::lt(curr, item)) break;
+            return LList<Elem>::insert(item);
+        }
+        // All remaining methods are exposed from AList
+        using LList<Elem>::remove;
+        using LList<Elem>::setStart;
+        using LList<Elem>::setEnd;
+        using LList<Elem>::prev;
+        using LList<Elem>::next;
+        using LList<Elem>::leftLength;
+        using LList<Elem>::rightLength;
+        using LList<Elem>::setPos;
+        using LList<Elem>::getValue;
+        using LList<Elem>::print;
+    };
+
+
+
+
+
+
 
 #define DLINK_DEBUG
 

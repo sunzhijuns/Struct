@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.9)
 set(CMAKE_CXX_STANDARD 11)
 
 SET(SRC_LIST
-        main.cpp
         List.cpp
         memory.cpp
         Compare.cpp
@@ -11,7 +10,10 @@ SET(SRC_LIST
         Stack.cpp
         Queue.cpp
         BinaryTree.cpp
-        MaxHeap.cpp)
+        MaxHeap.cpp
+        HuffTree.cpp
+        main.cpp
+        )
 
 message(status " src: this is binary dir " ${STRUCT_BINARY_DIR})
 message(status " src: this is binary dir " ${PROJECT_BINARY_DIR})

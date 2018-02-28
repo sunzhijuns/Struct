@@ -2,8 +2,8 @@
 // Created by sunzhijun on 18-2-26.
 //
 
-#include <algorithm>
 #include "MaxHeap.h"
+#include <algorithm>
 namespace structures{
     template <class Elem, class Comp>
     void MaxHeap<Elem, Comp>::shiftdown(int pos) {
@@ -55,7 +55,7 @@ namespace structures{
 }
 
 
-#define DEBUG_STRUCT_MAXHEAP_H
+//#define DEBUG_STRUCT_MAXHEAP_H
 #ifdef DEBUG_STRUCT_MAXHEAP_H
 
 #include "Compare.h"
