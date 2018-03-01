@@ -13,7 +13,7 @@ SET(SRC_LIST
         MaxHeap.cpp
         HuffTree.cpp
         main.cpp
-        )
+        GenTree.cpp)
 
 message(status " src: this is binary dir " ${STRUCT_BINARY_DIR})
 message(status " src: this is binary dir " ${PROJECT_BINARY_DIR})
